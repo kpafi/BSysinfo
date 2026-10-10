@@ -37,7 +37,7 @@ def standartausgabe():
     for p in alleordnernamen:
         try:
             with open(f"/proc/{p}/stat", "r") as f_stat:
-                parts = f_stat.readline().split(") ")[1].split()
+                parts = f_stat.readline().rsplit(")", 1)[1].split()
                 # utime + stime (Index 11 und 12 nach dem Split)
                 prozess_cpu_referenz[p] = int(parts[11]) + int(parts[12])
         except Exception:
@@ -107,8 +107,8 @@ def standartausgabe():
             cpuwert2 = 0
             with open("stat","r") as f:
                 werte = f.readline()
-                name_teil, werte= werte.split(")", 1)
-                processname = name_teil.split("(")[-1]
+                name_teil, werte= werte.rsplit(")", 1)
+                processname = name_teil.split("(", 1)[1]
                 werte = werte.split()
                 daten.append(processname) #Process NAME
                 daten.append(werte[0])  #Status
@@ -317,8 +317,8 @@ def processtree():
             os.chdir(processe)
             with open("stat", "r") as f:
                 werte = f.readline()
-                name_teil, werte = werte.split(")", 1)
-                processname = name_teil.split("(")[-1]
+                name_teil, werte= werte.rsplit(")", 1)
+                processname = name_teil.split("(", 1)[1]
                 werte = werte.split()
                 daten.append(processname)  # Process NAME
                 try:
@@ -392,7 +392,6 @@ def main():
             while True:
 
                 standartausgabe()
-                print("\033[H\033[2J\033[3J", end="", flush=True)
                 time.sleep(3)
         except KeyboardInterrupt:
             print("die ausgabe wurde beendet")
